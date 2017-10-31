@@ -161,7 +161,7 @@ function eigen(e11::Real,e22::Real,e33::Real,e12::Real,e13::Real,e23::Real)
   return eigen(Float64(e11),Float64(e22),Float64(e33),Float64(e12),Float64(e13),Float64(e23))
 end
 
-function eigen(A::AbstractArray{2,<:Real})
+function eigen(A::AbstractArray{<:Real,2})
   size(A) == (3,3) || throw(ArgumentError("Input must be a 3x3 Matrix"))
   (A[1,2] == A[2,1] && A[1,3] == A[3,1] && A[2,3] == A[3,2]) || throw(ArgumentError("Input must be symmetric matrix"))
   return eigen(A[1,1],A[2,2],A[3,3],A[1,2],A[1,3],A[2,3])
