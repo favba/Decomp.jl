@@ -1,3 +1,4 @@
+__precompile__()
 module Decomp
 
 using StaticArrays: MVector, SVector
