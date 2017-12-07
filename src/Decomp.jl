@@ -6,7 +6,7 @@ export eigen!, eigen, inphdecomp, propdecomp, inphmodel, propmodel, mixmodel
 
  function eigen!(e11::T,e22::T,e33::T,e12::T,e13::T,e23::T,eig::MVector{3,T},eigv1::MVector{3,T},eigv2::MVector{3,T},eigv3::MVector{3,T}) where T<:AbstractFloat
 
-  p1 = e12^2 + e13^2 + e23^2
+  p1 = muladd(e12, e12, muladd(e13, e13, e23*e23))
   if p1 == 0.0
     # E is diagonal.
     # eig[1] = e11
@@ -99,7 +99,24 @@ export eigen!, eigen, inphdecomp, propdecomp, inphmodel, propmodel, mixmodel
     eig[3] = q + 2*p*cos(ϕ+(2*π/3))
     eig[2] = 3*q - eig[1] - eig[3]     # since trace(E) = eig[1] + eig[2] + eig[3] = 3q
 
-    sort!(eig,by=abs,rev=true)
+    #sort!(eig,by=abs,rev=true)
+    if abs(eig[1]) < abs(eig[3])
+      big = eig[3]
+      if abs(eig[1]) < abs(eig[2])
+        eig[3] = eig[1]
+        eig[1] = big
+      else
+        eig[3] = eig[2]
+        eig[2] = eig[1]
+        eig[1] = big
+      end
+    else
+      if abs(eig[2]) < abs(eig[3])
+        medium = eig[3]
+        eig[3] = eig[2]
+        eig[2] = medium
+      end
+    end
 
     bla = ((e22 - eig[1])*(e33 - eig[1]) - e23*e23)
     if bla != 0
