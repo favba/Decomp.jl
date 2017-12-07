@@ -4,7 +4,7 @@ module Decomp
 using StaticArrays: MVector, SVector
 export eigen!, eigen, inphdecomp, propdecomp, inphmodel, propmodel, mixmodel
 
-@fastmath function eigen!(e11::T,e22::T,e33::T,e12::T,e13::T,e23::T,eig::MVector{3,T},eigv1::MVector{3,T},eigv2::MVector{3,T},eigv3::MVector{3,T}) where T<:AbstractFloat
+ function eigen!(e11::T,e22::T,e33::T,e12::T,e13::T,e23::T,eig::MVector{3,T},eigv1::MVector{3,T},eigv2::MVector{3,T},eigv3::MVector{3,T}) where T<:AbstractFloat
 
   p1 = e12^2 + e13^2 + e23^2
   if p1 == 0.0
@@ -168,7 +168,7 @@ function eigen(A::AbstractArray{<:Real,2})
   return eigen(A[1,1],A[2,2],A[3,3],A[1,2],A[1,3],A[2,3])
 end
 
-@fastmath function inphdecomp!(t11::T,t22::T,t33::T,t12::T,t13::T,t23::T,
+ function inphdecomp!(t11::T,t22::T,t33::T,t12::T,t13::T,t23::T,
                 e11::T,e22::T,e33::T,e12::T,e13::T,e23::T,
                 eig::MVector{3,T},eigv1::MVector{3,T},eigv2::MVector{3,T},eigv3::MVector{3,T}) where T<:AbstractFloat
 
@@ -213,7 +213,7 @@ end
 
 inphdecomp(var...) = inphdecomp((Float64(v) for v in var)...)
 
-@fastmath function propdecomp(t11::T,t22::T,t33::T,t12::T,t13::T,t23::T,
+ function propdecomp(t11::T,t22::T,t33::T,t12::T,t13::T,t23::T,
                     e11::T,e22::T,e33::T,e12::T,e13::T,e23::T) where T<:AbstractFloat
 
   mode2 = (e11^2 + 2*e12^2 + 2*e13^2 + e22^2 + 2*e23^2 + e33^2)
@@ -231,7 +231,7 @@ end
 
 propdecomp(var...) = propdecomp((Float64(v) for v in var)...)
 
-@fastmath function inphmodel(t11::Vector{T},t22::Vector{T},t33::Vector{T},t12::Vector{T},t13::Vector{T},t23::Vector{T}, #input
+ function inphmodel(t11::Vector{T},t22::Vector{T},t33::Vector{T},t12::Vector{T},t13::Vector{T},t23::Vector{T}, #input
                    e11::Vector{T},e22::Vector{T},e33::Vector{T},e12::Vector{T},e13::Vector{T},e23::Vector{T}, #input
                    tm11::Vector{T},tm22::Vector{T},tm33::Vector{T},tm12::Vector{T},tm13::Vector{T},tm23::Vector{T}, #output
                    alpha0::Vector{T},alpha1::Vector{T},alpha2::Vector{T},ratio::Vector{T}) where T<:Real
@@ -252,7 +252,7 @@ propdecomp(var...) = propdecomp((Float64(v) for v in var)...)
   return 0
 end
 
-@fastmath function propmodel(t11::A,t22::A,t33::A,t12::A,t13::A,t23::A, #input
+ function propmodel(t11::A,t22::A,t33::A,t12::A,t13::A,t23::A, #input
                    e11::A,e22::A,e33::A,e12::A,e13::A,e23::A, #input
                    tm11::A,tm22::A,tm33::A,tm12::A,tm13::A,tm23::A, #output
                    alpha::A,ratio::A) where {A<:Vector{<:Real}}
@@ -265,7 +265,7 @@ end
   return 0
 end
 
-@fastmath function mixmodel(t11::A,t22::A,t33::A,t12::A,t13::A,t23::A, #input
+ function mixmodel(t11::A,t22::A,t33::A,t12::A,t13::A,t23::A, #input
                   e11::A,e22::A,e33::A,e12::A,e13::A,e23::A, #input
                   c11::A,c22::A,c33::A,c12::A,c13::A,c23::A, #input
                   tm11::A,tm22::A,tm33::A,tm12::A,tm13::A,tm23::A, #output
