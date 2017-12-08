@@ -191,13 +191,13 @@ end
 
   eigen!(e11,e22,e33,e12,e13,e23,eig, eigv1, eigv2, eigv3)
 
-  m1 = t11*eigv1[1]*eigv1[1] + t22*eigv1[2]*eigv1[2] + t33*eigv1[3]*eigv1[3] + 2*(
-       t12*eigv1[1]*eigv1[2] + t13*eigv1[1]*eigv1[3] + t23*eigv1[2]*eigv1[3])
-  m2 = t11*eigv2[1]*eigv2[1] + t22*eigv2[2]*eigv2[2] + t33*eigv2[3]*eigv2[3] + 2*(
-       t12*eigv2[1]*eigv2[2] + t13*eigv2[1]*eigv2[3] + t23*eigv2[2]*eigv2[3])
+  m1 = muladd(t11, eigv1[1]*eigv1[1], muladd(t22, eigv1[2]*eigv1[2], muladd(t33, eigv1[3]*eigv1[3], 
+       2*muladd(t12, eigv1[1]*eigv1[2], muladd(t13, eigv1[1]*eigv1[3], t23*eigv1[2]*eigv1[3])))))
+  m2 = muladd(t11, eigv2[1]*eigv2[1], muladd(t22, eigv2[2]*eigv2[2], muladd(t33, eigv2[3]*eigv2[3], 
+       2*muladd(t12, eigv2[1]*eigv2[2], muladd(t13, eigv2[1]*eigv2[3], t23*eigv2[2]*eigv2[3])))))
   m3 = t11 + t22 + t33 - m1 - m2
 
-  lam2 = eig[1]^2 + eig[2]^2 + eig[3]^2
+  lam2 = muladd(eig[1], eig[1], muladd(eig[2], eig[2], eig[3]*eig[3]))
 
   a = 1 - (3*(eig[1]^2)/lam2)
   b = 1 - (3*(eig[2]^2)/lam2)
@@ -207,12 +207,12 @@ end
   alpha0 = (m1 - eig[1]*alpha1)/a
   alpha2 = -3*alpha0/lam2
 
-  tm11 = m1*eigv1[1]*eigv1[1] + m2*eigv2[1]*eigv2[1] + m3*eigv3[1]*eigv3[1]
-  tm22 = m1*eigv1[2]*eigv1[2] + m2*eigv2[2]*eigv2[2] + m3*eigv3[2]*eigv3[2]
-  tm33 = m1*eigv1[3]*eigv1[3] + m2*eigv2[3]*eigv2[3] + m3*eigv3[3]*eigv3[3]
-  tm12 = m1*eigv1[1]*eigv1[2] + m2*eigv2[1]*eigv2[2] + m3*eigv3[1]*eigv3[2]
-  tm13 = m1*eigv1[1]*eigv1[3] + m2*eigv2[1]*eigv2[3] + m3*eigv3[1]*eigv3[3]
-  tm23 = m1*eigv1[2]*eigv1[3] + m2*eigv2[2]*eigv2[3] + m3*eigv3[2]*eigv3[3]
+  tm11 = muladd(m1, eigv1[1]*eigv1[1], muladd(m2, eigv2[1]*eigv2[1], m3*eigv3[1]*eigv3[1]))
+  tm22 = muladd(m1, eigv1[2]*eigv1[2], muladd(m2, eigv2[2]*eigv2[2], m3*eigv3[2]*eigv3[2]))
+  tm33 = muladd(m1, eigv1[3]*eigv1[3], muladd(m2, eigv2[3]*eigv2[3], m3*eigv3[3]*eigv3[3]))
+  tm12 = muladd(m1, eigv1[1]*eigv1[2], muladd(m2, eigv2[1]*eigv2[2], m3*eigv3[1]*eigv3[2]))
+  tm13 = muladd(m1, eigv1[1]*eigv1[3], muladd(m2, eigv2[1]*eigv2[3], m3*eigv3[1]*eigv3[3]))
+  tm23 = muladd(m1, eigv1[2]*eigv1[3], muladd(m2, eigv2[2]*eigv2[3], m3*eigv3[2]*eigv3[3]))
 
   return tm11, tm22, tm33, tm12, tm13, tm23, alpha0, alpha1, alpha2
 end
